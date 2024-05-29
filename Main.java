@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner (System.in);
+        Scanner scanner = new Scanner(System.in);
         // user input the number of pencils
         System.out.println("How many pencils would you like to use:");
         int numPencils;
@@ -33,12 +33,32 @@ public class Main {
             }
         }
 
-        // Print the pencils
-        for (int i = 0; i < numPencils; i++) {
-            System.out.print("|");
-        }
-        System.out.println();
+        // game loop
+        int pencilsRemaining = numPencils;
+        String currentPlayer = firstPlayer;
+        while (pencilsRemaining > 0) {
+            for (int i = 0; i < pencilsRemaining; i++) {
+                System.out.print("|");
+            }
+            System.out.println();
+            System.out.println(currentPlayer + "'s turn:");
 
-        System.out.println(firstPlayer + " is going first!");
+            int pencilsRemoving;
+            while (true) {
+                try {
+                    pencilsRemoving = Integer.parseInt(scanner.nextLine());
+                    if (pencilsRemoving < 1 || pencilsRemoving > pencilsRemaining) {
+                        System.out.println("You can only remove between 1 and " + pencilsRemaining + " pencils.");
+                    } else {
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please enter a valid number.");
+                }
+            }
+            pencilsRemaining -= pencilsRemoving;
+            currentPlayer = (currentPlayer.equalsIgnoreCase("Andrew")) ? "Stasy" : "Andrew";
+        }
+        scanner.close();
     }
 }
