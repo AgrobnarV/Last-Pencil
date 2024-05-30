@@ -5,12 +5,15 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        // user input the number of pencils
-        System.out.println("How many pencils would you like to use:");
         int numPencils;
+        String firstPlayer;
+
+        // Input the number of pencils
+        System.out.println("How many pencils would you like to use:");
         while (true) {
+            String input = scanner.nextLine();
             try {
-                numPencils = Integer.parseInt(scanner.nextLine());
+                numPencils = Integer.parseInt(input);
                 if (numPencils <= 0) {
                     System.out.println("The number of pencils should be positive");
                 } else {
@@ -21,43 +24,58 @@ public class Main {
             }
         }
 
-        // user input to choose who goes first
+        // Input to choose who goes first
         System.out.println("Who will be the first (Andrew, Stasy):");
-        String firstPlayer;
         while (true) {
             firstPlayer = scanner.nextLine().trim();
             if (firstPlayer.equalsIgnoreCase("Andrew") || firstPlayer.equalsIgnoreCase("Stasy")) {
                 break;
             } else {
-                System.out.println("Please choose between 'Andrew' and 'Stasy'");
+                System.out.println("Choose between 'Andrew' and 'Stasy'");
             }
         }
 
-        // game loop
+        // Game loop
         int pencilsRemaining = numPencils;
         String currentPlayer = firstPlayer;
-        while (pencilsRemaining > 0) {
+        String otherPlayer = firstPlayer.equalsIgnoreCase("Andrew") ? "Stasy" : "Andrew";
+        while (true) {
+            // Print pencils
             for (int i = 0; i < pencilsRemaining; i++) {
                 System.out.print("|");
             }
             System.out.println();
-            System.out.println(currentPlayer + "'s turn:");
-
+            System.out.println(currentPlayer + "'s turn!");
+            
+            // limit to 3 pencils per turn
             int pencilsRemoving;
             while (true) {
+                String input = scanner.nextLine();
                 try {
-                    pencilsRemoving = Integer.parseInt(scanner.nextLine());
-                    if (pencilsRemoving < 1 || pencilsRemoving > pencilsRemaining) {
-                        System.out.println("You can only remove between 1 and " + pencilsRemaining + " pencils.");
+                    pencilsRemoving = Integer.parseInt(input);
+                    if (pencilsRemoving < 1 || pencilsRemoving > 3) {
+                        System.out.println("Possible values: '1', '2' or '3'");
+                    } else if (pencilsRemoving > pencilsRemaining) {
+                        System.out.println("Too many pencils were taken");
                     } else {
                         break;
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("Please enter a valid number.");
+                    System.out.println("Possible values: '1', '2' or '3'");
                 }
             }
-            pencilsRemaining -= pencilsRemoving;
-            currentPlayer = (currentPlayer.equalsIgnoreCase("Andrew")) ? "Stasy" : "Andrew";
+            pencilsRemaining -= pencilsRemoving; 
+
+            // win cause
+            if (pencilsRemaining == 0) {
+                System.out.println(otherPlayer + " won!");
+                break;
+            }
+
+            // Switch players
+            String temp = currentPlayer;
+            currentPlayer = otherPlayer;
+            otherPlayer = temp;
         }
         scanner.close();
     }
